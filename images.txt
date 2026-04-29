@@ -31,6 +31,7 @@ adguard/adguardhome
 coturn/coturn
 gitea/gitea
 gitlab/gitlab-ce
+gitlab/gitlab-ce:latest
 gitlab/gitlab-runner
 homeassistant/home-assistant
 jetbrains/youtrack
