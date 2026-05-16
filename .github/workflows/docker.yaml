@@ -2,6 +2,12 @@ name: Docker Pusher 🐳✨
 
 on:
   workflow_dispatch:
+    inputs:
+      images:
+        description: "镜像列表（每行一个，留空则读取 images.txt）"
+        required: false
+        type: string
+        default: ""
   schedule:
     - cron: "30 3 * * *"
 
@@ -219,11 +225,18 @@ jobs:
             fi
           }
 
-          echo "📦 Generating image list from images.txt..."
           > "$IMAGE_LIST"
-          while IFS= read -r line; do
-            generate_list "$line"
-          done < images.txt
+          if [[ -n "${{ inputs.images }}" ]]; then
+            echo "📦 Generating image list from manual input..."
+            echo "${{ inputs.images }}" | while IFS= read -r line; do
+              generate_list "$line"
+            done
+          else
+            echo "📦 Generating image list from images.txt..."
+            while IFS= read -r line; do
+              generate_list "$line"
+            done < images.txt
+          fi
 
           echo "📝 $(wc -l < "$IMAGE_LIST") images to sync:"
           cat "$IMAGE_LIST"
